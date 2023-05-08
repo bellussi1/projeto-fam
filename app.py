@@ -8,15 +8,18 @@ class App:
 
         self.master = master
         self.master.title("OFFPARTY")
-
+        
+        #Sem redimensionar
+        root.resizable(False, False)
+        
         # Conexão com o banco de dados PostgreSQL
-        self.conn = psycopg2.connect(
-            host="localhost",
-            database="projeto-fam",
-            user="postgres",
-            password="Enzocori@2"
-        )
-        self.cur = self.conn.cursor()
+        # self.conn = psycopg2.connect(
+        #     host="localhost",
+        #     database="projeto-fam",
+        #     user="postgres",
+        #     password="Enzocori@2"
+        # )
+        # self.cur = self.conn.cursor()
 
         # Criação das abas
         self.tabControl = ttk.Notebook(self.master)
@@ -36,93 +39,114 @@ class App:
 
         # Conteúdo da aba "Adicionar Produto"
         ttk.Label(self.tab1, text="Código do Produto:", style="TLabel").grid(
-            row=0, column=0, sticky="ew", padx=10, pady=10)
+            row=0, column=0, sticky="ns", padx=(40, 10), pady=10)
         self.produto_cod_produto = ttk.Entry(self.tab1)
         self.produto_cod_produto.grid(
-            row=0, column=1, sticky="ew", padx=10, pady=10)
+            row=0, column=1,  sticky="nsew", pady=10)
 
         ttk.Label(self.tab1, text="Nome do Produto:", style="TLabel").grid(
-            row=1, column=0, sticky="ew", padx=10, pady=10)
+            row=1, column=0, sticky="ns", padx=(40, 10), pady=10)
         self.produto_nome_produto = ttk.Entry(self.tab1)
         self.produto_nome_produto.grid(
-            row=1, column=1, sticky="ew", padx=10, pady=10)
+            row=1, column=1, sticky="nsew",  pady=10)
 
         ttk.Label(self.tab1, text="Valor unitário:", style="TLabel").grid(
-            row=2, column=0, sticky="ew", padx=10, pady=10)
+            row=2, column=0, sticky="ns", padx=(40, 10), pady=10)
         self.produto_valor = ttk.Entry(self.tab1)
-        self.produto_valor.grid(row=2, column=1, sticky="ew", padx=10, pady=10)
+        self.produto_valor.grid(
+            row=2, column=1, sticky="nsew",  pady=10)
 
         ttk.Label(self.tab1, text="Quantidade:", style="TLabel").grid(
-            row=3, column=0, sticky="ew", padx=10, pady=10)
+            row=3, column=0, sticky="ns", padx=(40, 10), pady=10)
         self.produto_quantidade = ttk.Entry(self.tab1)
         self.produto_quantidade.grid(
-            row=3, column=1, sticky="ew", padx=10, pady=10)
+            row=3, column=1, sticky="nsew", pady=10)
 
         ttk.Label(self.tab1, text="Categoria:", style="TLabel").grid(
-            row=4, column=0, sticky="ew", padx=10, pady=10)
+            row=4, column=0, sticky="ns", padx=(40, 0), pady=10)
         self.produto_categoria = ttk.Combobox(
             self.tab1, values=["Vinho", "Whisky", "Vodka", "Gin", "Conhaque", "Licor", "Champanhe", "Tequila", "Cerveja"])
         self.produto_categoria.grid(
-            row=4, column=1, sticky="ew", padx=10, pady=10)
+            row=4, column=1, sticky="nsew",  pady=10)
 
         ttk.Button(self.tab1, text="Adicionar", command=self.adicionar_produto,
-                   style="TButton").grid(row=5, columnspan=2,
-                                         sticky="ew", padx=10, pady=10)
+                   style="TButton").grid(row=5, columnspan=5,
+                                         sticky="ew", padx=(70, 0), pady=10)
 
         # Conteúdo da aba "Retirar Produto"
         ttk.Label(self.tab2, text="Retirar por:").grid(
-            row=0, column=0, sticky="ew", padx=10, pady=10)
+            row=0, column=0, sticky="ns", padx=(60, 10), pady=10)
         self.tipo_retirada = ttk.Combobox(self.tab2, values=["Nome", "Código"])
-        self.tipo_retirada.grid(row=0, column=1, sticky="ew", padx=10, pady=10)
+        self.tipo_retirada.grid(
+            row=0, column=1, sticky="nsew",  pady=10)
 
         ttk.Label(self.tab2, text="Parâmetro:").grid(
-            row=1, column=0, sticky="ew", padx=10, pady=10)
+            row=1, column=0, sticky="ns", padx=(60, 10), pady=10)
         self.valor_retirada = ttk.Entry(self.tab2)
         self.valor_retirada.grid(
-            row=1, column=1, sticky="ew", padx=10, pady=10)
+            row=1, column=1, sticky="nsew",  pady=10)
 
         ttk.Label(self.tab2, text="Quantidade:").grid(
-            row=2, column=0, sticky="ew", padx=10, pady=10)
+            row=2, column=0, sticky="ns", padx=(60, 10), pady=10)
         self.quantidade_produto_retirar = ttk.Entry(self.tab2)
         self.quantidade_produto_retirar.grid(
-            row=2, column=1, sticky="ew", padx=10, pady=10)
+            row=2, column=1, sticky="nsew",  pady=10)
 
         ttk.Button(self.tab2, text='Retirar', command=self.retirar_produto).grid(
-            row=3, columnspan=2, sticky="ew", padx=10, pady=10)
+            row=3, columnspan=5, sticky="ew", padx=(70, 0), pady=10)
 
         # Conteúdo da aba "Consultar Produto"
         ttk.Label(self.tab3, text="Consultar por:").grid(
-            row=0, column=0, sticky="ew", padx=10, pady=10)
+            row=0, column=0, sticky="ns", padx=10, pady=10)
         self.consulta_tipo = ttk.Combobox(
             self.tab3, values=["Nome", "Categoria", "Código"])
-        self.consulta_tipo.grid(row=0, column=1, sticky="ew", padx=10, pady=10)
+        self.consulta_tipo.grid(
+            row=0, column=1, sticky="nswe", padx=10, pady=10)
 
         ttk.Label(self.tab3, text="Filtro:").grid(
-            row=1, column=0, sticky="ew", padx=10, pady=10)
+            row=1, column=0, sticky="ns", padx=10, pady=10)
         self.consulta_filtro = ttk.Combobox(
             self.tab3, values=["Inicie com", "Contenha", "Seja igual"])
         self.consulta_filtro.grid(
-            row=1, column=1, sticky="ew", padx=10, pady=10)
+            row=1, column=1, sticky="nsew", padx=10, pady=10)
 
         ttk.Label(self.tab3, text="Ordenar por:").grid(
-            row=2, column=0, sticky="ew", padx=10, pady=10)
+            row=2, column=0, sticky="ns", padx=10, pady=10)
         self.consulta_ordem = ttk.Combobox(
             self.tab3, values=["Quantidade", "Valor", "Ordem alfabética"])
         self.consulta_ordem.grid(
-            row=2, column=1, sticky="ew", padx=10, pady=10)
+            row=2, column=1, sticky="nsew", padx=10, pady=10)
 
         ttk.Label(self.tab3, text="Parâmetro:").grid(
-            row=3, column=0, sticky="ew", padx=10, pady=10)
+            row=3, column=0, sticky="ns", padx=10, pady=10)
         self.consulta_valor = ttk.Entry(self.tab3)
         self.consulta_valor.grid(
-            row=3, column=1, sticky="ew", padx=10, pady=10)
+            row=3, column=1, sticky="nsew", padx=10, pady=10)
 
         ttk.Button(self.tab3, text="Consultar", command=self.consultar_produto).grid(
-            row=4, columnspan=2, sticky="ew", padx=10, pady=10)
+            row=4, columnspan=5, sticky="nsew", padx=10, pady=10)
 
-        # Espaço para a tabela de resultados
-        self.resultados_frame = ttk.Frame(self.tab3)
-        self.resultados_frame.grid(row=5, columnspan=2)
+        # Criação da tabela
+        self.tree = ttk.Treeview(self.tab3, columns=(
+            "Código", "Nome", "Valor", "Quantidade", "Categoria"), show="headings")
+
+        self.tree.heading("Código", text="Código")
+        self.tree.column("Código", width=75)
+
+        self.tree.heading("Nome", text="Nome")
+        self.tree.column("Nome", width=75)
+
+        self.tree.heading("Valor", text="Valor")
+        self.tree.column("Valor", width=75)
+
+        self.tree.heading("Quantidade", text="Quantidade")
+        self.tree.column("Quantidade", width=75)
+
+        self.tree.heading("Categoria", text="Categoria")
+        self.tree.column("Categoria", width=75)
+
+        self.tree.grid(row=5, column=0, columnspan=5,
+                       padx=10, pady=2, sticky='ew')
 
     def adicionar_produto(self):
         cod_produto = int(self.produto_cod_produto.get())
@@ -249,19 +273,8 @@ class App:
             else:
                 rows = self.cur.fetchall()
 
-                # Criação da tabela
-                self.tree = ttk.Treeview(self.tab3, height=6, columns=(
-                    "Código", "Nome", "Valor", "Quantidade", "Categoria"), show="headings")
-                self.tree.heading("Código", text="Código")
-                self.tree.heading("Nome", text="Nome")
-                self.tree.heading("Valor", text="Valor")
-                self.tree.heading("Quantidade", text="Quantidade")
-                self.tree.heading("Categoria", text="Categoria")
-
                 for row in rows:
                     self.tree.insert("", tk.END, values=row)
-
-                self.tree.grid(row=4,column=0,columnspan =5, padx=2,pady=2,sticky = 'ew')
 
         except Exception as e:
             print(e)
