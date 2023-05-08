@@ -1,6 +1,6 @@
 import tkinter as tk
 from tkinter import ttk
-
+import psycopg2
 
 
 class App:
@@ -9,17 +9,14 @@ class App:
         self.master = master
         self.master.title("OFFPARTY")
 
-        root.geometry('300x300')
-        self.master.resizable(False, False)
-
         # Conexão com o banco de dados PostgreSQL
-        # self.conn = psycopg2.connect(
-        #     host="hostname",
-        #     database="database_name",
-        #     user="username",
-        #     password="password"
-        # )
-        # self.cur = self.conn.cursor()
+        self.conn = psycopg2.connect(
+            host="localhost",
+            database="projeto-fam",
+            user="postgres",
+            password="Enzocori@2"
+        )
+        self.cur = self.conn.cursor()
 
         # Criação das abas
         self.tabControl = ttk.Notebook(self.master)
@@ -34,20 +31,21 @@ class App:
 
         # Estilizando
         style = ttk.Style()
-        style.configure("TLabel", font=("Helvetica", 10), foreground="black")
-        style.configure("TButton", font=("Helvetica", 10), foreground="black")
+        style.configure("TLabel", font=("Helvetica", 10), foreground="white")
+        style.configure("TButton", font=("Helvetica", 10), foreground="white")
 
         # Conteúdo da aba "Adicionar Produto"
         ttk.Label(self.tab1, text="Código do Produto:", style="TLabel").grid(
             row=0, column=0, sticky="ew", padx=10, pady=10)
-        self.produto_codigo = ttk.Entry(self.tab1)
-        self.produto_codigo.grid(
+        self.produto_cod_produto = ttk.Entry(self.tab1)
+        self.produto_cod_produto.grid(
             row=0, column=1, sticky="ew", padx=10, pady=10)
 
         ttk.Label(self.tab1, text="Nome do Produto:", style="TLabel").grid(
             row=1, column=0, sticky="ew", padx=10, pady=10)
-        self.produto_nome = ttk.Entry(self.tab1)
-        self.produto_nome.grid(row=1, column=1, sticky="ew", padx=10, pady=10)
+        self.produto_nome_produto = ttk.Entry(self.tab1)
+        self.produto_nome_produto.grid(
+            row=1, column=1, sticky="ew", padx=10, pady=10)
 
         ttk.Label(self.tab1, text="Valor unitário:", style="TLabel").grid(
             row=2, column=0, sticky="ew", padx=10, pady=10)
@@ -63,7 +61,7 @@ class App:
         ttk.Label(self.tab1, text="Categoria:", style="TLabel").grid(
             row=4, column=0, sticky="ew", padx=10, pady=10)
         self.produto_categoria = ttk.Combobox(
-            self.tab1, values=["Vinho", "Whisky", "Vodka"])
+            self.tab1, values=["Vinho", "Whisky", "Vodka", "Gin", "Conhaque", "Licor", "Champanhe", "Tequila", "Cerveja"])
         self.produto_categoria.grid(
             row=4, column=1, sticky="ew", padx=10, pady=10)
 
@@ -95,7 +93,8 @@ class App:
         # Conteúdo da aba "Consultar Produto"
         ttk.Label(self.tab3, text="Consultar por:").grid(
             row=0, column=0, sticky="ew", padx=10, pady=10)
-        self.consulta_tipo = ttk.Combobox(self.tab3, values=["Nome", "Categoria", "Código"])
+        self.consulta_tipo = ttk.Combobox(
+            self.tab3, values=["Nome", "Categoria", "Código"])
         self.consulta_tipo.grid(row=0, column=1, sticky="ew", padx=10, pady=10)
 
         ttk.Label(self.tab3, text="Filtro:").grid(
@@ -126,28 +125,28 @@ class App:
         self.resultados_frame.grid(row=5, columnspan=2)
 
     def adicionar_produto(self):
-        codigo = int(self.produto_codigo.get())
-        nome = self.produto_nome.get()
+        cod_produto = int(self.produto_cod_produto.get())
+        nome_produto = self.produto_nome_produto.get()
         valor = float(self.produto_valor.get())
         quantidade = int(self.produto_quantidade.get())
         categoria = self.produto_categoria.get()
 
         # Verifica se o produto já existe no banco de dados
-        query = "SELECT * FROM produtos WHERE codigo=%s"
-        values = (codigo,)
+        query = "SELECT * FROM produto WHERE cod_produto=%s"
+        values = (cod_produto,)
         self.cur.execute(query, values)
         if (self.cur.rowcount == 0):
             # Insere o produto no banco de dados
-            query = "INSERT INTO produtos (codigo, nome, valor, quantidade, categoria) VALUES (%s,%s,%s,%s,%s)"
-            values = (codigo, nome, valor, quantidade, categoria)
+            query = "INSERT INTO produto (cod_produto, nome_produto, valor, quantidade, categoria) VALUES (%s,%s,%s,%s,%s)"
+            values = (cod_produto, nome_produto, valor, quantidade, categoria)
             self.cur.execute(query, values)
             self.conn.commit()
             print("Produto adicionado com sucesso")
         else:
             row = self.cur.fetchone()
             # Atualiza a quantidade do produto no banco de dados
-            query = "UPDATE produtos SET quantidade=%s WHERE codigo=%s"
-            values = (row[3] + quantidade, codigo)
+            query = "UPDATE produto SET quantidade=%s WHERE cod_produto=%s"
+            values = (row[3] + quantidade, cod_produto)
             self.cur.execute(query, values)
             self.conn.commit()
             print("Quantidade do produto atualizada com sucesso")
@@ -157,11 +156,11 @@ class App:
         valor = self.valor_retirada.get()
         quantidade = int(self.quantidade_produto_retirar.get())
 
-        if tipo == "Nome":
-            query = "SELECT * FROM produtos WHERE nome=%s"
+        if tipo == "nome_produto":
+            query = "SELECT * FROM produto WHERE nome_produto=%s"
             values = (valor,)
         elif tipo == "Código":
-            query = "SELECT * FROM produtos WHERE codigo=%s"
+            query = "SELECT * FROM produto WHERE cod_produto=%s"
             values = (valor,)
         else:
             print("Tipo de retirada inválido")
@@ -178,11 +177,11 @@ class App:
                 return
             else:
                 print(
-                    f"Código: {row[0]}, Nome: {row[1]}, Valor: {row[2]}, Quantidade: {quantidade}, Categoria: {row[4]}")
+                    f"Código: {row[0]}, nome_produto: {row[1]}, Valor: {row[2]}, Quantidade: {quantidade}, Categoria: {row[4]}")
                 print(f"Valor total: {row[2] * quantidade}")
 
         # Atualiza a quantidade do produto no banco de dados
-        query = "UPDATE produtos SET quantidade=%s WHERE codigo=%s"
+        query = "UPDATE produto SET quantidade=%s WHERE cod_produto=%s"
         values = (row[3] - quantidade, row[0])
         try:
             self.cur.execute(query, values)
@@ -196,38 +195,38 @@ class App:
         filtro = self.consulta_filtro.get()
         valor = self.consulta_valor.get()
         ordem = self.consulta_ordem.get()
-        # Consulta filtro por nome
-        if tipo == "Nome":
+        # Consulta filtro por nome_produto
+        if tipo == "nome_produto":
             if filtro == "Inicie com":
-                query = "SELECT * FROM produtos WHERE nome LIKE %s"
+                query = "SELECT * FROM produto WHERE nome_produto LIKE %s"
                 values = (valor + "%",)
             elif filtro == "Contenha":
-                query = "SELECT * FROM produtos WHERE nome LIKE %s"
+                query = "SELECT * FROM produto WHERE nome_produto LIKE %s"
                 values = ("%" + valor + "%",)
             elif filtro == "Seja igual":
-                query = "SELECT * FROM produtos WHERE nome=%s"
+                query = "SELECT * FROM produto WHERE nome_produto=%s"
                 values = (valor,)
             else:
                 print("Filtro inválido consulta por categoria")
                 return
-        # Consulta filtro por categoria        
+        # Consulta filtro por categoria
         elif tipo == "Categoria":
             if filtro == "Inicie com":
-                query = "SELECT * FROM produtos WHERE categoria LIKE %s"
+                query = "SELECT * FROM produto WHERE categoria LIKE %s"
                 values = (valor + "%",)
             elif filtro == "Contenha":
-                query = "SELECT * FROM produtos WHERE categoria LIKE %s"
+                query = "SELECT * FROM produto WHERE categoria LIKE %s"
                 values = ("%" + valor + "%",)
             elif filtro == "Seja igual":
-                query = "SELECT * FROM produtos WHERE categoria=%s"
+                query = "SELECT * FROM produto WHERE categoria=%s"
                 values = (valor,)
             else:
                 print("Filtro inválido para consulta por categoria")
                 return
-        # Consulta filtro por código 
+        # Consulta filtro por código
         elif tipo == "Código":
             if filtro == "Seja igual":
-                query = "SELECT * FROM produtos WHERE codigo=%s"
+                query = "SELECT * FROM produto WHERE cod_produto=%s"
                 values = (valor,)
             else:
                 print("Filtro inválido para consulta por código")
@@ -241,7 +240,7 @@ class App:
         elif ordem == "Valor":
             query += " ORDER BY valor"
         elif ordem == "Ordem alfabética":
-            query += " ORDER BY nome"
+            query += " ORDER BY nome_produto"
 
         try:
             self.cur.execute(query, values)
@@ -251,7 +250,7 @@ class App:
                 rows = self.cur.fetchall()
 
                 # Criação da tabela
-                self.tree = ttk.Treeview(self.tab3, columns=(
+                self.tree = ttk.Treeview(self.tab3, height=6, columns=(
                     "Código", "Nome", "Valor", "Quantidade", "Categoria"), show="headings")
                 self.tree.heading("Código", text="Código")
                 self.tree.heading("Nome", text="Nome")
@@ -262,7 +261,7 @@ class App:
                 for row in rows:
                     self.tree.insert("", tk.END, values=row)
 
-                self.tree.grid(row=5, columnspan=2)
+                self.tree.grid(row=4,column=0,columnspan =5, padx=2,pady=2,sticky = 'ew')
 
         except Exception as e:
             print(e)
