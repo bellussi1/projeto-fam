@@ -1,0 +1,46 @@
+1. Desenvolvimento do Cronograma
+
+- Análise de atividades, durações, recursos e restrições.
+- Criação de um modelo de cronograma para execução, monitoramento e controle do projeto.
+- Modelo de cronograma é dinâmico e pode ser atualizado ao longo do projeto.
+
+2. Modelo de Cronograma
+
+- Baseado no plano de gerenciamento do cronograma, linha de base do escopo e documentos do projeto.
+- Deve refletir relações lógicas entre atividades, requisitos e disponibilidade dos recursos, premissas e riscos.
+- Deve ser aprovado pelos stakeholders.
+
+3. Formatos do Modelo de Cronograma
+
+- Pode ser apresentado em gráficos de barras, gráficos de marcos ou diagramas de rede.
+
+4. Técnicas de Compressão de Cronograma
+
+- Usadas para encurtar ou acelerar a duração do cronograma sem reduzir o escopo.
+Exemplos: compressão (adiciona recursos às atividades do caminho crítico) e paralelismo (executa atividades ou fases normalmente sequenciais de forma paralela).
+
+5. Análise de Cenário “E-se”
+
+- Avalia cenários para predizer seus efeitos nos objetivos do projeto.
+
+6. Simulação
+
+- Modela os efeitos combinados de riscos individuais do projeto e outras fontes de incerteza.
+- Técnica mais comum é a análise de Monte Carlo.
+
+7. Antecipações Esperadas
+
+- Refinamentos aplicados durante a análise da rede para produzir um cronograma viável.
+
+8. Solicitações de Mudança
+
+- Modificações no escopo ou no cronograma que podem resultar em mudanças na linha de base do escopo e/ou nos outros componentes do plano de gerenciamento.
+
+9. Atualizações no Plano de Gerenciamento do Projeto 
+
+- Qualquer mudança no plano passa pelo processo de controle de mudanças da organização através de uma solicitação de mudança. 
+- Os componentes que podem exigir uma solicitação de mudança incluem o plano de gerenciamento do cronograma e a linha de base dos custos.
+
+10. Atualizações dos Documentos do Projeto 
+
+- Os documentos que podem ser atualizados incluem os atributos das atividades, o registro das premissas, as estimativas da duração, o registro das lições aprendidas, os requisitos dos recursos e o registro dos riscos.
